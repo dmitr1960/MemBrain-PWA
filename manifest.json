@@ -1,0 +1,9 @@
+{
+  "name": "MemBrain - Тренажер памяти",
+  "short_name": "MemBrain",
+  "description": "Твой личный тренер памяти с AI",
+  "start_url": "/MemBrain-PWA/",
+  "display": "standalone", 
+  "background_color": "#ffffff",
+  "theme_color": "#000000"
+}
