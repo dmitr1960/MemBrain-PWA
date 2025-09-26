@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <!-- Иконка для браузера -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='85' fill='%232e54d7'>🧠</text></svg>">
+
+<!-- Простой PWA манифест -->
+<link rel="manifest" href="manifest.json">
+  \"name\": \"MemBrain\",
+  \"short_name\": \"MemBrain\",
+  \"description\": \"Тренажер памяти с AI\",
+  \"start_url\": \".\",
+  \"display\": \"standalone\",
+  \"theme_color\": \"#2e54d7\",
+  \"background_color\": \"#ffffff\",
+  \"icons\": [
+    {
+      \"src\": \"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='85' fill='%232e54d7'>🧠</text></svg>\",
+      \"sizes\": \"192x192\",
+      \"type\": \"image/svg+xml\",
+      \"purpose\": \"any maskable\"
+    }
+  ]
+}">
+
+<!-- Для Apple устройств -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%232e54d7'/><text y='.9em' font-size='85' fill='white'>🧠</text></svg>">
+<meta name="apple-mobile-web-app-title" content="MemBrain">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<!-- Общие настройки -->
+<meta name="theme-color" content="#2e54d7">
+<meta name="application-name" content="MemBrain">
+<meta name="mobile-web-app-capable" content="yes"><meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MemBrain - Тренажер памяти</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f0f2f5;
+            color: #333;
+        }
+        .app {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        h1 {
+            color: #2e54d7;
+            margin-bottom: 0.5rem;
+        }
+        .choice-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .choice-button {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            text-decoration: none;
+            color: #1a1a1a;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 2px solid #2e54d7;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .choice-button:hover {
+            background: #2e54d7;
+            color: white;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header>
+            <h1>MemBrain</h1>
+            <p>Твой личный тренер памяти с AI</p>
+        </header>
+        <div class="choice-buttons">
+            <a href="manual.html" class="choice-button">✏ Создать карточки вручную</a>
+            <a href="ai.html" class="choice-button">🧠 Создать из текста (AI)</a>
+        </div>
+    </div>
+</body>
+</html>

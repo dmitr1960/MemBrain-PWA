@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создать карточки - MemBrain</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background: #f0f2f5; 
+        }
+        .app { 
+            max-width: 600px; 
+            margin: 0 auto; 
+        }
+        input, textarea { 
+            width: 100%; 
+            padding: 10px; 
+            margin: 5px 0; 
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button { 
+            background: #2e54d7; 
+            color: white; 
+            padding: 12px; 
+            border: none; 
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+        button:hover {
+            background: #1e44c7;
+        }
+        .card-item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #2e54d7;
+        }
+        .debug-info {
+            background: #ffeaa7;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <h1>✏ Создать карточки</h1>
+        <a href="index.html" style="color: #2e54d7; text-decoration: none;">← Назад</a>
+
+        <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
+            <input type="text" id="deckTitle" placeholder="Название темы (например, Биология)">
+            
+            <div style="margin: 20px 0;">
+                <h3>Добавить карточку</h3>
+                <textarea id="newQuestion" placeholder="Вопрос..."></textarea>
+                <textarea id="newAnswer" placeholder="Ответ..."></textarea>
+                <button id="addCardBtn">+ Добавить карточку</button>
+            </div>
+
+            <!-- Блок отладки -->
+            <div id="debugInfo" class="debug-info" style="display: none;">
+                <strong>Отладка:</strong> <span id="debugText"></span>
+            </div>
+
+            <div id="cardList">
+                <!-- Сюда будут добавляться карточки -->
+            </div>
+
+            <button id="saveDeckBtn">💾 Сохранить тему</button>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript для ручного создания карточек
+        console.log('Manual page loaded');
+        
+        // Функция для отладки
+        function showDebug(message) {
+            document.getElementById('debugText').textContent = message;
+            document.getElementById('debugInfo').style.display = 'block';
+            console.log('Debug:', message);
+        }
+        
+        // Функция получения карточек (с совместимостью)
+        function getSavedCards() {
+            // Пробуем разные ключи для совместимости
+            var cards = JSON.parse(localStorage.getItem('membrain-cards')) || [];
+            
+            // Если нет карточек, пробуем старый формат
+            if (cards.length === 0) {
+                var oldData = localStorage.getItem('membrain-deck');
+                if (oldData) {
+                    try {
+                        var deck = JSON.parse(oldData);
+                        cards = deck.cards || [];
+                        showDebug('Найдены карточки в старом формате: ' + cards.length + ' шт.');
+                    } catch (e) {
+                        showDebug('Ошибка чтения старых данных');
+                    }
+                }
+            }
+            
+            showDebug('Загружено карточек: ' + cards.length);
+            return cards;
+        }
+        
+        // Функция обновления списка карточек
+        function updateCardList() {
+            var cardList = document.getElementById('cardList');
+            var savedCards = getSavedCards();
+            
+            if (savedCards.length === 0) {
+                cardList.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">Карточки появятся здесь...</p>';
+                return;
+            }
+            
+            cardList.innerHTML = '<h3>Ваши карточки (' + savedCards.length + '):</h3>';
+            
+            savedCards.forEach(function(card, index) {
+                var question = card.question || 'Без вопроса';
+                var answer = card.answer || 'Без ответа';
+                
+                cardList.innerHTML += `
+                    <div class="card-item">
+                        <strong>${index + 1}. Вопрос:</strong> ${question}<br>
+                        <strong>Ответ:</strong> ${answer}
+                    </div>
+                `;
+            });
+        }
+        
+        // Функция добавления карточки
+        function addCard() {
+            var question = document.getElementById('newQuestion').value.trim();
+            var answer = document.getElementById('newAnswer').value.trim();
+            
+            if (question && answer) {
+                // Получаем текущие карточки
+                var savedCards = getSavedCards();
+                
+                // Добавляем новую карточку
+                savedCards.push({
+                    question: question,
+                    answer: answer,
+                    created: new Date().toLocaleString()
+                });
+                
+                // Сохраняем обратно
+                localStorage.setItem('membrain-cards', JSON.stringify(savedCards));
+                
+                // Очищаем поля
+                document.getElementById('newQuestion').value = '';
+                document.getElementById('newAnswer').value = '';
+                
+                // Обновляем список
+                updateCardList();
+                
+                alert('Карточка добавлена! Всего карточек: ' + savedCards.length);
+            } else {
+                alert('Заполните вопрос и ответ!');
+            }
+        }
+        
+        // Функция сохранения темы
+        function saveDeck() {
+            var title = document.getElementById('deckTitle').value.trim();
+            var savedCards = getSavedCards();
+            
+            if (!title) {
+                alert('Введите название темы!');
+                return;
+            }
+            
+            if (savedCards.length === 0) {
+                alert('Добавьте хотя бы одну карточку!');
+                return;
+            }
+            
+            // Сохраняем тему
+            var deck = {
+                title: title,
+                cards: savedCards,
+                created: new Date().toLocaleString()
+            };
+            
+            localStorage.setItem('membrain-deck-' + Date.now(), JSON.stringify(deck));
+            alert('Тема "' + title + '" сохранена! Карточек: ' + savedCards.length);
+        }
+        
+        // Назначаем обработчики событий после загрузки страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('addCardBtn').onclick = addCard;
+            document.getElementById('saveDeckBtn').onclick = saveDeck;
+            
+            // Показываем существующие карточки
+            updateCardList();
+            
+            // Обработчик Enter в поле ответа
+            document.getElementById('newAnswer').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addCard();
+                }
+            });
+            
+            showDebug('Страница загружена');
+        });
+    </script>
+</body>
+</html>
